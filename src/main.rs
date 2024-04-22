@@ -1,4 +1,7 @@
-use axum::{routing::get, Router};
+use axum::{
+    routing::{get, post},
+    Router,
+};
 use maud::{html, Markup, DOCTYPE};
 use tokio::net::TcpListener;
 
@@ -7,9 +10,17 @@ const HTMX_SHA: &str = "sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoY
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new().route("/", get(base_handler));
+    let app = Router::new()
+        .route("/", get(base_handler))
+        .route("/clicked", post(click_handler));
     let listener = TcpListener::bind("0.0.0.0:3000").await.unwrap();
     axum::serve(listener, app).await.unwrap();
+}
+
+async fn click_handler() -> Markup {
+    html! {
+        "New text after click"
+    }
 }
 
 async fn base_handler() -> Markup {
@@ -22,8 +33,9 @@ async fn base_handler() -> Markup {
                 title { "RUST-HTMX Sandbox" }
             }
             body {
-                h1 { "Hello" }
-                div { "Some text" }
+                h1 { "RESTful HTML" }
+                div id="some-text" { "Some text" }
+                button hx-post="/clicked" hx-target="#some-text" hx-swap="outerHTML" { "Click ME!" }
             }
         }
     }
