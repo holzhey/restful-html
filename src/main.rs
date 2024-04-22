@@ -7,20 +7,23 @@ const HTMX_SHA: &str = "sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoY
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new().route("/", get(handler));
+    let app = Router::new().route("/", get(base_handler));
     let listener = TcpListener::bind("0.0.0.0:3000").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn handler() -> Markup {
+async fn base_handler() -> Markup {
     html! {
         (DOCTYPE)
-        html {
+        html lang="en-US" {
             head {
-                script src=(HTMX_SOURCE) integrity=(HTMX_SHA) crossorigin="anonymous";
+                meta charset="utf-8";
+                script src=(HTMX_SOURCE) integrity=(HTMX_SHA) crossorigin="anonymous" {}
+                title { "RUST-HTMX Sandbox" }
             }
             body {
                 h1 { "Hello" }
+                div { "Some text" }
             }
         }
     }
