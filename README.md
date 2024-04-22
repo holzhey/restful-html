@@ -1,4 +1,4 @@
-# RUST-HTMX ![rust workflow](https://github.com/holzhey/rust-htmx/actions/workflows/rust.yml/badge.svg)
+# RESTful HTML ![rust workflow](https://github.com/holzhey/rust-htmx/actions/workflows/rust.yml/badge.svg)
 
 [![forthebadge](http://forthebadge.com/images/badges/made-with-rust.svg)](http://forthebadge.com)
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
