@@ -1,4 +1,4 @@
-# RUST-HTMX
+# RUST-HTMX ![rust workflow](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
 
 [![forthebadge](http://forthebadge.com/images/badges/made-with-rust.svg)](http://forthebadge.com)
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
