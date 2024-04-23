@@ -5,6 +5,7 @@ use axum::{
 };
 
 use maud::{html, Markup, DOCTYPE};
+use tracing::info;
 
 use crate::AppState;
 
@@ -15,13 +16,17 @@ pub fn init(state: AppState) -> Router {
         .with_state(state)
 }
 
+#[tracing::instrument]
 pub async fn click_handler() -> Markup {
+    info!("click");
     html! {
         "New text after click"
     }
 }
 
+#[tracing::instrument]
 pub async fn base_handler(State(state): State<AppState>) -> Markup {
+    info!("base");
     html! {
         (DOCTYPE)
         html lang="en-US" {

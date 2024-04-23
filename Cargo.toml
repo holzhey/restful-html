@@ -11,3 +11,5 @@ maud = { version = "0.26.0", features = ["axum"] }
 serde = { version = "1.0.198", features = ["derive"] }
 tokio = { version = "1.37.0", features = ["full"] }
 toml = "0.8.12"
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
