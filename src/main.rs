@@ -1,23 +1,30 @@
 use axum::{
+    extract::State,
     routing::{get, post},
     Router,
 };
 
+use config::Config;
 use maud::{html, Markup, DOCTYPE};
 use tokio::net::TcpListener;
 
 pub mod config;
 
-const HTMX_SOURCE: &str = "https://unpkg.com/htmx.org@1.9.12";
-const HTMX_SHA: &str = "sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2";
+#[derive(Clone)]
+pub struct AppState {
+    config: Config,
+}
 
 #[tokio::main]
 async fn main() {
     let cfg = config::init();
+    let address = cfg.address.clone();
+    let state = AppState { config: cfg };
     let app = Router::new()
         .route("/", get(base_handler))
-        .route("/clicked", post(click_handler));
-    let listener = TcpListener::bind(cfg.address).await.unwrap();
+        .route("/clicked", post(click_handler))
+        .with_state(state);
+    let listener = TcpListener::bind(address).await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
 
@@ -27,13 +34,13 @@ async fn click_handler() -> Markup {
     }
 }
 
-async fn base_handler() -> Markup {
+async fn base_handler(State(state): State<AppState>) -> Markup {
     html! {
         (DOCTYPE)
         html lang="en-US" {
             head {
                 meta charset="utf-8";
-                script src=(HTMX_SOURCE) integrity=(HTMX_SHA) crossorigin="anonymous" {}
+                script src=(state.config.htmx.source) integrity=(state.config.htmx.sha) crossorigin="anonymous" {}
                 title { "RUST-HTMX Sandbox" }
             }
             body {

@@ -4,12 +4,13 @@ use serde::Deserialize;
 
 pub const CONFIG_FILE: &str = "config.toml";
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub struct Config {
     pub address: String,
+    pub htmx: Htmx,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 pub struct Htmx {
     pub source: String,
     pub sha: String,
