@@ -3,17 +3,39 @@ use axum::{
     Router,
 };
 use maud::{html, Markup, DOCTYPE};
+use serde::Deserialize;
 use tokio::net::TcpListener;
 
 const HTMX_SOURCE: &str = "https://unpkg.com/htmx.org@1.9.12";
 const HTMX_SHA: &str = "sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2";
 
+#[derive(Deserialize)]
+struct Config {
+    address: String,
+}
+
+#[derive(Deserialize)]
+struct Htmx {
+    source: String,
+    sha: String,
+}
+
 #[tokio::main]
 async fn main() {
+    let config: Config = toml::from_str(
+        r#"
+        address='127.0.0.1:3000'
+
+        [htmx]
+        source='https://unpkg.com/htmx.org@1.9.12'
+        sha='sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2'
+        "#,
+    )
+    .unwrap();
     let app = Router::new()
         .route("/", get(base_handler))
         .route("/clicked", post(click_handler));
-    let listener = TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    let listener = TcpListener::bind(config.address).await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
 
