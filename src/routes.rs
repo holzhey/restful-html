@@ -43,3 +43,23 @@ pub async fn base_handler(State(state): State<AppState>) -> Markup {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+
+    use crate::routes::click_handler;
+
+    #[tokio::test]
+    async fn click_handler_test() {
+        let v: String = click_handler().await.into();
+
+        assert_eq!(v, "New text after click");
+    }
+
+    #[tokio::test]
+    async fn base_handler_test() {
+        let v: String = click_handler().await.into();
+
+        assert_eq!(v.len(), 20);
+    }
+}
