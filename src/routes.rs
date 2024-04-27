@@ -47,7 +47,11 @@ pub async fn base_handler(State(state): State<AppState>) -> Markup {
 #[cfg(test)]
 mod tests {
 
-    use crate::routes::click_handler;
+    use crate::{
+        config::Htmx,
+        routes::{base_handler, click_handler},
+        AppState,
+    };
 
     #[tokio::test]
     async fn click_handler_test() {
@@ -58,8 +62,22 @@ mod tests {
 
     #[tokio::test]
     async fn base_handler_test() {
-        let v: String = click_handler().await.into();
+        let v: String = base_handler(axum::extract::State(create_app_state()))
+            .await
+            .into();
 
-        assert_eq!(v.len(), 20);
+        assert_eq!(v.len(), 326);
+    }
+
+    fn create_app_state() -> AppState {
+        AppState {
+            config: crate::config::Config {
+                address: "".to_string(),
+                htmx: Htmx {
+                    source: "".to_string(),
+                    sha: "".to_string(),
+                },
+            },
+        }
     }
 }
