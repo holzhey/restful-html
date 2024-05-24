@@ -38,7 +38,7 @@ pub async fn base_handler(State(state): State<AppState>) -> Markup {
             body {
                 h1 { "RESTful HTML" }
                 div id="some-text" { "Some text" }
-                button hx-post="/clicked" hx-target="#some-text" hx-swap="outerHTML" { "Click ME!" }
+                button hx-post="/clicked" hx-target="#some-text" hx-swap="innerHTML" { "Click ME!" }
             }
         }
     }

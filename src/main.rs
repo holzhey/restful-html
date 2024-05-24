@@ -1,6 +1,5 @@
 use config::Config;
 
-use routes::init;
 use tokio::net::TcpListener;
 use tracing::{info, Level};
 
@@ -26,7 +25,7 @@ async fn main() {
     let cfg = config::init();
     let address = cfg.address.clone();
     let state = AppState { config: cfg };
-    let app = init(state);
+    let app = routes::init(state);
     let listener = TcpListener::bind(address).await.unwrap();
     info!("Starting server");
     axum::serve(listener, app).await.unwrap();
