@@ -4,16 +4,33 @@ use axum::{
     Router,
 };
 
-use maud::{html, Markup, DOCTYPE};
+use maud::{html, Markup, Render, DOCTYPE};
 use tracing::info;
 
 use crate::AppState;
+
+struct Css(&'static str);
+
+impl Render for Css {
+    fn render(&self) -> Markup {
+        html! {
+            link rel="stylesheet" type="text/css" href=(self.0);
+        }
+    }
+}
 
 pub fn init(state: AppState) -> Router {
     Router::new()
         .route("/", get(base_handler))
         .route("/clicked", post(click_handler))
+        .route("/style.css", get(style_handler))
         .with_state(state)
+}
+
+#[tracing::instrument]
+pub async fn style_handler() -> String {
+    info!("style");
+    "background-color: #ff0000;".to_string()
 }
 
 #[tracing::instrument]
@@ -34,6 +51,7 @@ pub async fn base_handler(State(state): State<AppState>) -> Markup {
                 meta charset="utf-8";
                 script src=(state.config.htmx.source) integrity=(state.config.htmx.sha) crossorigin="anonymous" {}
                 title { "RUST-HTMX Sandbox" }
+                (Css("style.css"))
             }
             body {
                 h1 { "RESTful HTML" }
@@ -66,7 +84,7 @@ mod tests {
             .await
             .into();
 
-        assert_eq!(v.len(), 326);
+        assert_eq!(v.len(), 382);
     }
 
     fn create_app_state() -> AppState {
